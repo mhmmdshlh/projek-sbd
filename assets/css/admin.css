@@ -1,0 +1,349 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+/* Header Styles */
+.header {
+    background-color: #ffffff;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+}
+
+.logo-highlight {
+    color: #F59E0B;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background-color: #F59E0B;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+    background-color: #D97706;
+}
+
+.dropdown-toggle i {
+    font-size: 14px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+    margin-top: 8px;
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+    background-color: #FEF3C7;
+}
+
+.dropdown-menu a:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.dropdown-menu a:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+/* Main Content */
+.main-content {
+    padding: 40px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 40px;
+    background-color: #E5E7EB;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Table Container */
+.table-container {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+/* Table Styles */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background-color: #4B5563;
+}
+
+.data-table thead th {
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 18px 20px;
+    text-align: left;
+    border-bottom: 3px solid #374151;
+}
+
+.data-table thead th:last-child {
+    text-align: center;
+}
+
+.data-table tbody tr {
+    background-color: #4B5563;
+    border-bottom: 1px solid #374151;
+    transition: background-color 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+    background-color: #3F4752;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: #434B57;
+}
+
+.data-table tbody tr:nth-child(even):hover {
+    background-color: #3F4752;
+}
+
+.data-table tbody td {
+    padding: 18px 20px;
+    color: white;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.data-table tbody td:first-child {
+    font-weight: 500;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.status-paid {
+    background-color: #10B981;
+    color: white;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-edit,
+.btn-delete {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.btn-edit {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #2563EB;
+    transform: scale(1.1);
+}
+
+.btn-delete {
+    background-color: #EF4444;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #DC2626;
+    transform: scale(1.1);
+}
+
+/* Add Button */
+.add-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn-add-data {
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.btn-add-data:hover {
+    background-color: #2563EB;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-add-data:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .main-content {
+        padding: 30px 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .logo-text {
+        font-size: 24px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .page-title {
+        font-size: 24px;
+        padding: 15px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .data-table {
+        min-width: 800px;
+    }
+
+    .data-table thead th,
+    .data-table tbody td {
+        padding: 12px 15px;
+        font-size: 13px;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calculator-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .calculator-btn i {
+        font-size: 18px;
+    }
+
+    .dropdown-toggle {
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+}
