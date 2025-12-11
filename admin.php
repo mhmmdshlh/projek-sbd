@@ -193,36 +193,75 @@ function getTableDisplayName($table)
 </head>
 
 <body>
-    <?php if (isset($error_message)): ?>
+    <?php if (!empty($error_message)): ?>
         <div class="alert alert-error">
             <?php echo htmlspecialchars($error_message); ?>
         </div>
     <?php endif; ?>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
             <div class="logo">
                 <img src="assets/img/logo.svg" alt="KoperasiKu" class="logo-img">
                 <span class="logo-text">Koperasi<span class="logo-highlight">Ku</span></span>
             </div>
-            <div class="header-right">
-                <div class="dropdown">
-                    <button class="dropdown-toggle">
-                        <?php echo getTableDisplayName($table); ?>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a href="admin.php?table=anggota">Anggota</a>
-                        <a href="admin.php?table=pengurus">Pengurus</a>
-                        <a href="admin.php?table=simpanan">Simpanan</a>
-                        <a href="admin.php?table=pinjaman">Pinjaman</a>
-                        <a href="admin.php?table=barang">Barang</a>
-                        <a href="admin.php?table=pelatihan">Pelatihan</a>
-                        <a href="admin.php?table=peserta">Peserta Pelatihan</a>
-                    </div>
+            <nav class="sidebar-menu">
+                <div class="menu-section">
+                    <h3 class="menu-title">Menu Utama</h3>
+                    <a href="admin.php?table=anggota"
+                        class="menu-item <?php echo $table == 'anggota' ? 'active' : ''; ?>">
+                        <i class="fas fa-users"></i>
+                        <span>Anggota</span>
+                    </a>
+                    <a href="admin.php?table=pengurus"
+                        class="menu-item <?php echo $table == 'pengurus' ? 'active' : ''; ?>">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Pengurus</span>
+                    </a>
                 </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Keuangan</h3>
+                    <a href="admin.php?table=simpanan"
+                        class="menu-item <?php echo $table == 'simpanan' ? 'active' : ''; ?>">
+                        <i class="fas fa-piggy-bank"></i>
+                        <span>Simpanan</span>
+                    </a>
+                    <a href="admin.php?table=pinjaman"
+                        class="menu-item <?php echo $table == 'pinjaman' ? 'active' : ''; ?>">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span>Pinjaman</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Lainnya</h3>
+                    <a href="admin.php?table=barang"
+                        class="menu-item <?php echo $table == 'barang' ? 'active' : ''; ?>">
+                        <i class="fas fa-box"></i>
+                        <span>Barang</span>
+                    </a>
+                    <a href="admin.php?table=pelatihan"
+                        class="menu-item <?php echo $table == 'pelatihan' ? 'active' : ''; ?>">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Pelatihan</span>
+                    </a>
+                    <a href="admin.php?table=peserta"
+                        class="menu-item <?php echo $table == 'peserta' ? 'active' : ''; ?>">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Peserta Pelatihan</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="index.php" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Exit</span>
+                </a>
             </div>
-        </header>
+        </aside>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -340,7 +379,6 @@ function getTableDisplayName($table)
         </main>
     </div>
 
-    <script src="assets/js/admin.js"></script>
 </body>
 
 </html>
