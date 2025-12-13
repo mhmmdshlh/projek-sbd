@@ -1,0 +1,144 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.header {
+    background-color: #ffffff;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    min-width: 100vw;
+    height: 90px;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+}
+
+.logo-highlight {
+    color: #F59E0B;
+}
+
+nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+nav .admin {
+    padding: 13px;
+    border-radius: 5px;
+    color: #ddd;
+    background-color: #333;
+}
+
+.hero {
+    margin-top: 90px;
+    display: flex;
+    padding: 50px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hero-text {
+    max-width: 45%;
+}
+
+.hero-text h1 span {
+    color: #f4b400;
+}
+
+.hero-text button {
+    background: orange;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    cursor: pointer;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.hero img {
+    max-width: 45%;
+    border-radius: 10px;
+}
+
+.section-title {
+    text-align: center;
+    margin-top: 60px;
+    font-size: 28px;
+}
+
+.section-title span {
+    color: #f4b400;
+}
+
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.feature-box {
+    width: 200px;
+    height: 150px;
+    background: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.cta {
+    background: #f4f4f4;
+    padding: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cta button {
+    background: orange;
+    border: none;
+    padding: 12px 25px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+footer {
+    background: #264996;
+    color: white;
+    text-align: center;
+    padding: 30px;
+    margin-top: 40px;
+}

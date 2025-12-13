@@ -256,7 +256,7 @@ function getTableDisplayName($table)
             </nav>
 
             <div class="sidebar-footer">
-                <a href="index.php" class="logout-btn">
+                <a href="home.php" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Exit</span>
                 </a>
