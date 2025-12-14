@@ -42,14 +42,6 @@ CREATE TABLE Simpanan (
     FOREIGN KEY (id_anggota) REFERENCES Anggota(id_anggota)
 );
 
-CREATE TABLE Penarikan_simpanan (
-    id_penarikan INT PRIMARY KEY AUTO_INCREMENT,
-    jumlah_penarikan DECIMAL(15, 2),
-    tgl_penarikan DATE,
-    id_simpanan INT,
-    FOREIGN KEY (id_simpanan) REFERENCES Simpanan(id_simpanan)
-);
-
 CREATE TABLE Pinjaman (
     id_pinjaman INT PRIMARY KEY AUTO_INCREMENT,
     jumlah DECIMAL(15, 2),
@@ -58,16 +50,6 @@ CREATE TABLE Pinjaman (
     status_pinjam VARCHAR(20),
     id_anggota INT,
     FOREIGN KEY (id_anggota) REFERENCES Anggota(id_anggota)
-);
-
-CREATE TABLE Pembayaran_pinjaman (
-    id_pembayaran INT PRIMARY KEY AUTO_INCREMENT,
-    jumlah_bayar DECIMAL(15, 2),
-    tgl_bayar DATE,
-    angsuran_ke INT,
-    sisa_pinjaman DECIMAL(15, 2),
-    id_pinjaman INT,
-    FOREIGN KEY (id_pinjaman) REFERENCES Pinjaman(id_pinjaman)
 );
 
 CREATE TABLE Pelatihan (

@@ -2,7 +2,7 @@
 require_once 'config/database.php';
 
 $table = $_GET['table'] ?? 'anggota';
-$allowed_tables = ['anggota', 'pengurus', 'simpanan', 'pinjaman', 'barang', 'pelatihan', 'peserta', 'narasumber'];
+$allowed_tables = ['anggota', 'pengurus', 'simpanan', 'pinjaman', 'barang', 'pelatihan', 'peserta', 'narasumber', 'penjualan'];
 
 if (!in_array($table, $allowed_tables)) {
     header("Location: admin.php");
@@ -13,6 +13,7 @@ if (!in_array($table, $allowed_tables)) {
 $data_anggota = [];
 $data_pelatihan = [];
 $data_narasumber = [];
+$data_barang = [];
 
 if (in_array($table, ['pengurus', 'simpanan', 'pinjaman', 'peserta'])) {
     $query_anggota = "SELECT id_anggota, nama FROM Anggota ORDER BY nama ASC";
@@ -61,9 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
 
             case 'barang':
-                $query = "INSERT INTO Barang (nama_barang, harga_jual, stok) VALUES (?, ?, ?)";
+                $query = "INSERT INTO Barang (nama_barang, kategori, harga_beli, harga_jual, stok) VALUES (?, ?, ?, ?, ?)";
                 $stmt = $pdo->prepare($query);
-                $stmt->execute([$_POST['nama_barang'], $_POST['harga'], $_POST['stok']]);
+                $stmt->execute([$_POST['nama_barang'], $_POST['kategori'], $_POST['harga_beli'], $_POST['harga_jual'], $_POST['stok']]);
                 break;
 
             case 'pelatihan':
@@ -83,6 +84,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $query = "INSERT INTO Narasumber (nama, asal, no_hp, email) VALUES (?, ?, ?, ?)";
                 $stmt = $pdo->prepare($query);
                 $stmt->execute([$_POST['nama'], $_POST['asal'], $_POST['no_hp'], $_POST['email']]);
+                break;
+
+            case 'penjualan':
+                // Begin transaction
+                $pdo->beginTransaction();
+
+                try {
+                    // Insert into Transaksi_penjualan
+                    $id_pelanggan = ($_POST['jenis_pelanggan'] == 'Anggota' && !empty($_POST['id_pelanggan'])) ? $_POST['id_pelanggan'] : null;
+
+                    $query_transaksi = "INSERT INTO Transaksi_penjualan (tgl_transaksi, total_harga, metode_pembayaran, jenis_pelanggan, id_pelanggan) 
+                                       VALUES (?, ?, ?, ?, ?)";
+                    $stmt_transaksi = $pdo->prepare($query_transaksi);
+                    $stmt_transaksi->execute([
+                        $_POST['tgl_transaksi'],
+                        $_POST['total_harga'],
+                        $_POST['metode_pembayaran'],
+                        $_POST['jenis_pelanggan'],
+                        $id_pelanggan
+                    ]);
+
+                    $id_transaksi = $pdo->lastInsertId();
+
+                    // Insert into Detail_penjualan
+                    $query_detail = "INSERT INTO Detail_penjualan (jumlah, harga_satuan, subtotal, id_transaksi, id_barang) 
+                                    VALUES (?, ?, ?, ?, ?)";
+                    $stmt_detail = $pdo->prepare($query_detail);
+
+                    // Update stock
+                    $query_update_stok = "UPDATE Barang SET stok = stok - ? WHERE id_barang = ?";
+                    $stmt_update_stok = $pdo->prepare($query_update_stok);
+
+                    foreach ($_POST['items'] as $item) {
+                        if (!empty($item['id_barang']) && !empty($item['jumlah'])) {
+                            // Insert detail
+                            $stmt_detail->execute([
+                                $item['jumlah'],
+                                $item['harga_satuan'],
+                                $item['subtotal'],
+                                $id_transaksi,
+                                $item['id_barang']
+                            ]);
+
+                            // Update stock
+                            $stmt_update_stok->execute([
+                                $item['jumlah'],
+                                $item['id_barang']
+                            ]);
+                        }
+                    }
+
+                    $pdo->commit();
+                } catch (Exception $e) {
+                    $pdo->rollBack();
+                    throw $e;
+                }
                 break;
         }
 
@@ -115,7 +172,8 @@ function getTableTitle($table)
         'barang' => 'Barang',
         'pelatihan' => 'Pelatihan',
         'peserta' => 'Peserta Pelatihan',
-        'narasumber' => 'Narasumber'
+        'narasumber' => 'Narasumber',
+        'penjualan' => 'Penjualan'
     ];
     return $titles[$table] ?? 'Data';
 }

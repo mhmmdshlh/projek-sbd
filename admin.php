@@ -3,7 +3,7 @@ require_once 'config/database.php';
 
 // Determine which table to display
 $table = $_GET['table'] ?? 'anggota';
-$allowed_tables = ['anggota', 'pengurus', 'simpanan', 'pinjaman', 'barang', 'pelatihan', 'peserta'];
+$allowed_tables = ['anggota', 'pengurus', 'simpanan', 'pinjaman', 'barang', 'pelatihan', 'peserta', 'penjualan'];
 
 if (!in_array($table, $allowed_tables)) {
     $table = 'anggota';
@@ -42,6 +42,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']) 
                 break;
             case 'peserta':
                 $delete_query = "DELETE FROM Peserta_pelatihan WHERE id_peserta = ?";
+                break;
+            case 'penjualan':
+                // Delete details first
+                $delete_detail = "DELETE FROM Detail_penjualan WHERE id_transaksi = ?";
+                $stmt_detail = $pdo->prepare($delete_detail);
+                $stmt_detail->execute([$id]);
+                // Then delete transaction
+                $delete_query = "DELETE FROM Transaksi_penjualan WHERE id_transaksi = ?";
                 break;
         }
 
@@ -120,6 +128,18 @@ try {
             $page_title = "Data Peserta Pelatihan";
             $table_headers = ['No', 'Nama', 'Pelatihan', 'Kehadiran', 'Sertifikat', 'Aksi'];
             $primary_key = 'id_peserta';
+            break;
+
+        case 'penjualan':
+            $query = "SELECT tp.*, 
+                      a.nama as nama_pelanggan,
+                      (SELECT COUNT(*) FROM Detail_penjualan WHERE id_transaksi = tp.id_transaksi) as jumlah_item
+                      FROM Transaksi_penjualan tp 
+                      LEFT JOIN Anggota a ON tp.id_pelanggan = a.id_anggota 
+                      ORDER BY tp.tgl_transaksi DESC, tp.id_transaksi DESC";
+            $page_title = "Data Penjualan";
+            $table_headers = ['No', 'Tanggal', 'Pelanggan', 'Total', 'Metode Pembayaran', 'Item', 'Aksi'];
+            $primary_key = 'id_transaksi';
             break;
     }
 
@@ -242,6 +262,11 @@ function getTableDisplayName($table)
                         <i class="fas fa-box"></i>
                         <span>Barang</span>
                     </a>
+                    <a href="admin.php?table=penjualan"
+                        class="menu-item <?php echo $table == 'penjualan' ? 'active' : ''; ?>">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Penjualan</span>
+                    </a>
                     <a href="admin.php?table=pelatihan"
                         class="menu-item <?php echo $table == 'pelatihan' ? 'active' : ''; ?>">
                         <i class="fas fa-chalkboard-teacher"></i>
@@ -348,6 +373,18 @@ function getTableDisplayName($table)
                                             echo "<td>" . htmlspecialchars($row['judul_pelatihan']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['status_kehadiran'] ?? '-') . "</td>";
                                             echo "<td>" . htmlspecialchars($row['sertifikat'] ?? '-') . "</td>";
+                                            break;
+
+                                        case 'penjualan':
+                                            echo "<td>{$no}</td>";
+                                            echo "<td>" . formatTanggal($row['tgl_transaksi']) . "</td>";
+                                            $pelanggan = ($row['jenis_pelanggan'] == 'Anggota' && !empty($row['nama_pelanggan']))
+                                                ? $row['nama_pelanggan']
+                                                : 'Pelanggan Umum';
+                                            echo "<td>" . htmlspecialchars($pelanggan) . "</td>";
+                                            echo "<td>" . formatRupiah($row['total_harga']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['metode_pembayaran']) . "</td>";
+                                            echo "<td>" . $row['jumlah_item'] . " item</td>";
                                             break;
                                     }
                                     ?>

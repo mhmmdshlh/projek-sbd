@@ -4,7 +4,7 @@ require_once 'config/database.php';
 $table = $_GET['table'] ?? 'anggota';
 $id = $_GET['id'] ?? 0;
 
-$allowed_tables = ['anggota', 'pengurus', 'simpanan', 'pinjaman', 'barang', 'pelatihan', 'peserta'];
+$allowed_tables = ['anggota', 'pengurus', 'simpanan', 'pinjaman', 'barang', 'pelatihan', 'peserta', 'penjualan'];
 
 if (!in_array($table, $allowed_tables) || !$id) {
     header("Location: admin.php");
@@ -21,7 +21,8 @@ function getPrimaryKey($table)
         'pinjaman' => 'id_pinjaman',
         'barang' => 'id_barang',
         'pelatihan' => 'id_pelatihan',
-        'peserta' => 'id_peserta'
+        'peserta' => 'id_peserta',
+        'penjualan' => 'id_transaksi'
     ];
     return $keys[$table] ?? 'id';
 }
@@ -35,7 +36,8 @@ function getTableTitle($table)
         'pinjaman' => 'Pinjaman',
         'barang' => 'Barang',
         'pelatihan' => 'Pelatihan',
-        'peserta' => 'Peserta Pelatihan'
+        'peserta' => 'Peserta Pelatihan',
+        'penjualan' => 'Penjualan'
     ];
     return $titles[$table] ?? 'Data';
 }
@@ -44,7 +46,7 @@ $primary_key = getPrimaryKey($table);
 
 // Fetch existing data
 try {
-    $query = "SELECT * FROM " . ucfirst($table == 'peserta' ? 'Peserta_pelatihan' : $table) . " WHERE $primary_key = ?";
+    $query = "SELECT * FROM " . ucfirst($table == 'peserta' ? 'Peserta_pelatihan' : ($table == 'penjualan' ? 'Transaksi_penjualan' : $table)) . " WHERE $primary_key = ?";
     $stmt = $pdo->prepare($query);
     $stmt->execute([$id]);
     $data = $stmt->fetch();
@@ -55,6 +57,15 @@ try {
     }
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());
+}
+
+// Fetch detail items for penjualan
+$detail_items = [];
+if ($table == 'penjualan') {
+    $query_detail = "SELECT * FROM Detail_penjualan WHERE id_transaksi = ?";
+    $stmt_detail = $pdo->prepare($query_detail);
+    $stmt_detail->execute([$id]);
+    $detail_items = $stmt_detail->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Fetch related data for dropdowns
@@ -109,9 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
 
             case 'barang':
-                $query = "UPDATE Barang SET nama_barang = ?, harga_jual = ?, stok = ? WHERE id_barang = ?";
+                $query = "UPDATE Barang SET nama_barang = ?, kategori = ?, harga_beli = ?, harga_jual = ?, stok = ? WHERE id_barang = ?";
                 $stmt = $pdo->prepare($query);
-                $stmt->execute([$_POST['nama_barang'], $_POST['harga'], $_POST['stok'], $id]);
+                $stmt->execute([$_POST['nama_barang'], $_POST['kategori'], $_POST['harga_beli'], $_POST['harga_jual'], $_POST['stok'], $id]);
                 break;
 
             case 'pelatihan':
@@ -125,6 +136,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $query = "UPDATE Peserta_pelatihan SET status_kehadiran = ?, id_pelatihan = ?, id_anggota = ? WHERE id_peserta = ?";
                 $stmt = $pdo->prepare($query);
                 $stmt->execute([$_POST['status_kehadiran'], $_POST['id_pelatihan'], $_POST['id_anggota'], $id]);
+                break;
+
+            case 'penjualan':
+                // Begin transaction
+                $pdo->beginTransaction();
+
+                try {
+                    // Restore stock from old items first
+                    $query_old_items = "SELECT id_barang, jumlah FROM Detail_penjualan WHERE id_transaksi = ?";
+                    $stmt_old = $pdo->prepare($query_old_items);
+                    $stmt_old->execute([$id]);
+                    $old_items = $stmt_old->fetchAll(PDO::FETCH_ASSOC);
+
+                    $query_restore_stok = "UPDATE Barang SET stok = stok + ? WHERE id_barang = ?";
+                    $stmt_restore = $pdo->prepare($query_restore_stok);
+                    foreach ($old_items as $old_item) {
+                        $stmt_restore->execute([$old_item['jumlah'], $old_item['id_barang']]);
+                    }
+
+                    // Delete old details
+                    $query_delete = "DELETE FROM Detail_penjualan WHERE id_transaksi = ?";
+                    $stmt_delete = $pdo->prepare($query_delete);
+                    $stmt_delete->execute([$id]);
+
+                    // Update Transaksi_penjualan
+                    $id_pelanggan = ($_POST['jenis_pelanggan'] == 'Anggota' && !empty($_POST['id_pelanggan'])) ? $_POST['id_pelanggan'] : null;
+
+                    $query_transaksi = "UPDATE Transaksi_penjualan SET tgl_transaksi = ?, total_harga = ?, metode_pembayaran = ?, jenis_pelanggan = ?, id_pelanggan = ? WHERE id_transaksi = ?";
+                    $stmt_transaksi = $pdo->prepare($query_transaksi);
+                    $stmt_transaksi->execute([
+                        $_POST['tgl_transaksi'],
+                        $_POST['total_harga'],
+                        $_POST['metode_pembayaran'],
+                        $_POST['jenis_pelanggan'],
+                        $id_pelanggan,
+                        $id
+                    ]);
+
+                    // Insert new details and update stock
+                    $query_detail = "INSERT INTO Detail_penjualan (jumlah, harga_satuan, subtotal, id_transaksi, id_barang) VALUES (?, ?, ?, ?, ?)";
+                    $stmt_detail = $pdo->prepare($query_detail);
+
+                    $query_update_stok = "UPDATE Barang SET stok = stok - ? WHERE id_barang = ?";
+                    $stmt_update_stok = $pdo->prepare($query_update_stok);
+
+                    foreach ($_POST['items'] as $item) {
+                        if (!empty($item['id_barang']) && !empty($item['jumlah'])) {
+                            $stmt_detail->execute([
+                                $item['jumlah'],
+                                $item['harga_satuan'],
+                                $item['subtotal'],
+                                $id,
+                                $item['id_barang']
+                            ]);
+
+                            $stmt_update_stok->execute([
+                                $item['jumlah'],
+                                $item['id_barang']
+                            ]);
+                        }
+                    }
+
+                    $pdo->commit();
+                } catch (Exception $e) {
+                    $pdo->rollBack();
+                    throw $e;
+                }
                 break;
         }
 
