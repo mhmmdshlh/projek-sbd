@@ -46,18 +46,24 @@
     </h2>
 
     <section class="features">
-        <div>
-            <div class="feature-box"></div>
-            <p>Barang Tersedia</p>
-        </div>
-        <div>
-            <div class="feature-box"></div>
-            <p>Tata Cara Peminjaman</p>
-        </div>
-        <div>
-            <div class="feature-box"></div>
-            <p>Info Pelatihan</p>
-        </div>
+        <a href="barang_tersedia.php" style="text-decoration:none; color:inherit;">
+            <div>
+                <div class="feature-box"></div>
+                <p>Barang Tersedia</p>
+            </div>
+        </a>
+        <a href="tatacara_peminjaman.php" style="text-decoration:none; color:inherit;">
+            <div>
+                <div class="feature-box"></div>
+                <p>Tata Cara Peminjaman</p>
+            </div>
+        </a>
+        <a href="info_pelatihan.php" style="text-decoration:none; color:inherit;">
+            <div>
+                <div class="feature-box"></div>
+                <p>Info Pelatihan</p>
+            </div>
+        </a>
     </section>
 
     <section class="pelatihan-section">
