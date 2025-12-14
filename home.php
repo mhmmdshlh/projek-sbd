@@ -48,19 +48,48 @@
     <section class="features">
         <a href="barang_tersedia.php" style="text-decoration:none; color:inherit;">
             <div>
-                <div class="feature-box"></div>
+                <div class="feature-box" aria-label="Barang Tersedia">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true">
+                        <path d="M21 8.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M3.5 8.5 12 3l8.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M9 21V12h6v9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
                 <p>Barang Tersedia</p>
             </div>
         </a>
         <a href="tatacara_peminjaman.php" style="text-decoration:none; color:inherit;">
             <div>
-                <div class="feature-box"></div>
+                <div class="feature-box" aria-label="Tata Cara Peminjaman">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true">
+                        <path d="M4 7h12a2 2 0 0 1 2 2v2H4V7Z" stroke="currentColor" stroke-width="2"
+                            stroke-linejoin="round" />
+                        <path d="M4 11h16v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6Z" stroke="currentColor" stroke-width="2"
+                            stroke-linejoin="round" />
+                        <path d="M7 15h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        <path d="M16 6V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        <path d="M19 6V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </div>
                 <p>Tata Cara Peminjaman</p>
             </div>
         </a>
         <a href="info_pelatihan.php" style="text-decoration:none; color:inherit;">
             <div>
-                <div class="feature-box"></div>
+                <div class="feature-box" aria-label="Info Pelatihan">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true">
+                        <path d="M12 3 2 7l10 4 10-4-10-4Z" stroke="currentColor" stroke-width="2"
+                            stroke-linejoin="round" />
+                        <path d="M2 7v8l10 4 10-4V7" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                        <path d="M6 10v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </div>
                 <p>Info Pelatihan</p>
             </div>
         </a>

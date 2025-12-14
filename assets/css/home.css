@@ -148,6 +148,20 @@ nav .admin {
     margin: 40px 0;
 }
 
+.features a {
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+}
+
+.features a:hover .feature-box {
+    background: #f0f0f0;
+}
+
+.features a:hover p {
+    color: #333;
+}
+
 .feature-box {
     width: 200px;
     height: 150px;
@@ -156,6 +170,12 @@ nav .admin {
     justify-content: center;
     align-items: center;
     border-radius: 10px;
+    color: #333;
+}
+
+.feature-box svg {
+    width: 64px;
+    height: 64px;
 }
 
 .pelatihan-section {
