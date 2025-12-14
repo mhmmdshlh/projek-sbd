@@ -133,9 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
 
             case 'peserta':
-                $query = "UPDATE Peserta_pelatihan SET status_kehadiran = ?, id_pelatihan = ?, id_anggota = ? WHERE id_peserta = ?";
+                $query = "UPDATE Peserta_pelatihan SET status_kehadiran = ?, id_pelatihan = ?, id_anggota = ?, no_sertifikat = ? WHERE id_peserta = ?";
                 $stmt = $pdo->prepare($query);
-                $stmt->execute([$_POST['status_kehadiran'], $_POST['id_pelatihan'], $_POST['id_anggota'], $id]);
+                $stmt->execute([$_POST['status_kehadiran'], $_POST['id_pelatihan'], $_POST['id_anggota'], $_POST['no_sertifikat'], $id]);
                 break;
 
             case 'penjualan':

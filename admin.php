@@ -150,7 +150,7 @@ try {
                       INNER JOIN Pelatihan pel ON pp.id_pelatihan = pel.id_pelatihan 
                       ORDER BY pp.id_peserta DESC";
             $page_title = "Data Peserta Pelatihan";
-            $table_headers = ['No', 'Nama', 'Pelatihan', 'Kehadiran', 'Sertifikat', 'Aksi'];
+            $table_headers = ['No', 'Nama', 'Pelatihan', 'Kehadiran', 'Nomor Sertifikat', 'Aksi'];
             $primary_key = 'id_peserta';
             break;
 
@@ -382,7 +382,7 @@ function formatTanggal($date)
                                             echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['judul_pelatihan']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['status_kehadiran'] ?? '-') . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['sertifikat'] ?? '-') . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['no_sertifikat'] ?? '-') . "</td>";
                                             break;
 
                                         case 'penjualan':

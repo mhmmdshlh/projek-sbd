@@ -75,9 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
 
             case 'peserta':
-                $query = "INSERT INTO Peserta_pelatihan (status_kehadiran, id_pelatihan, id_anggota) VALUES (?, ?, ?)";
+                $query = "INSERT INTO Peserta_pelatihan (status_kehadiran, id_pelatihan, id_anggota, no_sertifikat) VALUES (?, ?, ?, ?)";
                 $stmt = $pdo->prepare($query);
-                $stmt->execute([$_POST['status_kehadiran'], $_POST['id_pelatihan'], $_POST['id_anggota']]);
+                $stmt->execute([$_POST['status_kehadiran'], $_POST['id_pelatihan'], $_POST['id_anggota'], $_POST['no_sertifikat']]);
                 break;
 
             case 'narasumber':

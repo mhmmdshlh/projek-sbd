@@ -38,7 +38,9 @@
     </div>
 
     <div class="form-group">
-        <!-- Empty space for alignment -->
+        <label for="nomor-sertifikat">Nomor Sertifikat</label>
+        <input type="text" name="no_sertifikat" id="nomor-sertifikat"
+            value="<?php echo isset($data) ? htmlspecialchars($data['no_sertifikat']) : ''; ?>">
     </div>
 </div>
 </div>
