@@ -129,7 +129,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $success_message = "Data berhasil diupdate!";
-        header("refresh:2;url=admin.php?table=" . $table);
+
+        // Redirect logic untuk narasumber
+        if ($table == 'narasumber') {
+            $redirect_table = $_GET['ref'] ?? 'pelatihan';
+            $redirect_id = $_GET['ref_id'] ?? '';
+            header("refresh:2;url=edit_data.php?table=" . $redirect_table . "&id=" . $redirect_id);
+        } else {
+            header("refresh:2;url=admin.php?table=" . $table);
+        }
     } catch (PDOException $e) {
         $error_message = "Error: " . $e->getMessage();
     }
@@ -158,7 +166,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <span class="logo-text">Koperasi<span class="logo-highlight">Ku</span></span>
             </div>
             <div class="header-right">
-                <a href="admin.php?table=<?php echo $table; ?>" class="btn-back">
+                <a href="<?php
+                if ($table == 'narasumber') {
+                    $redirect_table = $_GET['ref'] ?? 'pelatihan';
+                    $redirect_id = $_GET['ref_id'] ?? '';
+                    echo 'edit_data.php?table=' . $redirect_table . '&id=' . $redirect_id;
+                } else {
+                    echo 'admin.php?table=' . $table;
+                }
+                ?>" class="btn-back">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
             </div>
@@ -187,7 +203,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <button type="submit" class="btn-submit">
                             <i class="fas fa-save"></i> Update Data
                         </button>
-                        <a href="admin.php?table=<?php echo $table; ?>" class="btn-cancel">
+                        <a href="<?php
+                        if ($table == 'narasumber') {
+                            $redirect_table = $_GET['ref'] ?? 'pelatihan';
+                            $redirect_id = $_GET['ref_id'] ?? '';
+                            echo 'edit_data.php?table=' . $redirect_table . '&id=' . $redirect_id;
+                        } else {
+                            echo 'admin.php?table=' . $table;
+                        }
+                        ?>" class="btn-cancel">
                             <i class="fas fa-times"></i> Batal
                         </a>
                     </div>

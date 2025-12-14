@@ -2,7 +2,7 @@
 require_once 'config/database.php';
 
 $table = $_GET['table'] ?? 'anggota';
-$allowed_tables = ['anggota', 'pengurus', 'simpanan', 'pinjaman', 'barang', 'pelatihan', 'peserta'];
+$allowed_tables = ['anggota', 'pengurus', 'simpanan', 'pinjaman', 'barang', 'pelatihan', 'peserta', 'narasumber'];
 
 if (!in_array($table, $allowed_tables)) {
     header("Location: admin.php");
@@ -67,10 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
 
             case 'pelatihan':
-                $query = "INSERT INTO Pelatihan (judul_pelatihan, tanggal, tempat, id_narasumber) VALUES (?, ?, ?, ?)";
+                $query = "INSERT INTO Pelatihan (judul_pelatihan, tanggal, tempat, biaya_pendaftaran, id_narasumber) VALUES (?, ?, ?, ?, ?)";
                 $stmt = $pdo->prepare($query);
                 $id_narasumber = !empty($_POST['id_narasumber']) ? $_POST['id_narasumber'] : null;
-                $stmt->execute([$_POST['judul'], $_POST['tgl_pelatihan'], $_POST['lokasi'], $id_narasumber]);
+                $stmt->execute([$_POST['judul'], $_POST['tgl_pelatihan'], $_POST['lokasi'], $_POST['id_biaya'], $id_narasumber]);
                 break;
 
             case 'peserta':
@@ -78,9 +78,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt = $pdo->prepare($query);
                 $stmt->execute([$_POST['status_kehadiran'], $_POST['id_pelatihan'], $_POST['id_anggota']]);
                 break;
+
+            case 'narasumber':
+                $query = "INSERT INTO Narasumber (nama, asal, no_hp, email) VALUES (?, ?, ?, ?)";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([$_POST['nama'], $_POST['asal'], $_POST['no_hp'], $_POST['email']]);
+                break;
         }
 
         $success_message = "Data berhasil ditambahkan!";
+
+        // Redirect logic untuk narasumber
+        if ($table == 'narasumber') {
+            $redirect_table = $_GET['ref'] ?? 'pelatihan';
+            $redirect_id = $_GET['ref_id'] ?? '';
+            $is_edit = $_GET['edit'] ?? '';
+
+            if ($is_edit && $redirect_id) {
+                header("refresh:2;url=edit_data.php?table=" . $redirect_table . "&id=" . $redirect_id);
+            } else {
+                header("refresh:2;url=tambah_data.php?table=" . $redirect_table);
+            }
+        }
     } catch (PDOException $e) {
         $error_message = "Error: " . $e->getMessage();
     }
@@ -95,7 +114,8 @@ function getTableTitle($table)
         'pinjaman' => 'Pinjaman',
         'barang' => 'Barang',
         'pelatihan' => 'Pelatihan',
-        'peserta' => 'Peserta Pelatihan'
+        'peserta' => 'Peserta Pelatihan',
+        'narasumber' => 'Narasumber'
     ];
     return $titles[$table] ?? 'Data';
 }
@@ -122,7 +142,18 @@ function getTableTitle($table)
                 <span class="logo-text">Koperasi<span class="logo-highlight">Ku</span></span>
             </div>
             <div class="header-right">
-                <a href="admin.php?table=<?php echo $table; ?>" class="btn-back">
+                <a href="<?php
+                if ($table == 'narasumber') {
+                    $redirect_table = $_GET['ref'] ?? 'pelatihan';
+                    $redirect_id = $_GET['ref_id'] ?? '';
+                    $is_edit = $_GET['edit'] ?? '';
+                    echo ($is_edit && $redirect_id)
+                        ? 'edit_data.php?table=' . $redirect_table . '&id=' . $redirect_id
+                        : 'tambah_data.php?table=' . $redirect_table;
+                } else {
+                    echo 'admin.php?table=' . $table;
+                }
+                ?>" class="btn-back">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
             </div>
@@ -151,7 +182,18 @@ function getTableTitle($table)
                         <button type="submit" class="btn-submit">
                             <i class="fas fa-save"></i> Simpan Data
                         </button>
-                        <a href="admin.php?table=<?php echo $table; ?>" class="btn-cancel">
+                        <a href="<?php
+                        if ($table == 'narasumber') {
+                            $redirect_table = $_GET['ref'] ?? 'pelatihan';
+                            $redirect_id = $_GET['ref_id'] ?? '';
+                            $is_edit = $_GET['edit'] ?? '';
+                            echo ($is_edit && $redirect_id)
+                                ? 'edit_data.php?table=' . $redirect_table . '&id=' . $redirect_id
+                                : 'tambah_data.php?table=' . $redirect_table;
+                        } else {
+                            echo 'admin.php?table=' . $table;
+                        }
+                        ?>" class="btn-cancel">
                             <i class="fas fa-times"></i> Batal
                         </a>
                     </div>

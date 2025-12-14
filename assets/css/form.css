@@ -57,7 +57,7 @@ body {
 /* Main Content */
 .main-content {
     background-color: #f5f5f5;
-    max-width: 80vw;
+    max-width: 1000px;
     min-height: 100vh;
     padding: 30px 40px;
     margin: 90px auto;
@@ -162,6 +162,27 @@ body {
 .form-group textarea {
     resize: vertical;
     min-height: 100px;
+}
+
+.narasumber-button {
+    height: 50px;
+    width: fit-content;
+    margin-top: 30px;
+    padding: 8px 16px;
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.narasumber-button:hover {
+    background-color: #2563EB;
 }
 
 /* Alert Messages */

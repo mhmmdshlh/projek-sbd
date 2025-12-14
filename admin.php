@@ -90,7 +90,7 @@ try {
                       INNER JOIN Anggota a ON p.id_anggota = a.id_anggota 
                       ORDER BY p.tgl_pinjam DESC";
             $page_title = "Data Pinjaman";
-            $table_headers = ['No', 'Nama Anggota', 'Jumlah', 'Tanggal Pinjam', 'Status', 'Aksi'];
+            $table_headers = ['No', 'Nama Anggota', 'Jumlah', 'Tanggal Pinjam', 'Tanggal Jatuh Tempo', 'Status', 'Aksi'];
             $primary_key = 'id_pinjaman';
             break;
 
@@ -319,6 +319,7 @@ function getTableDisplayName($table)
                                             echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
                                             echo "<td>" . formatRupiah($row['jumlah']) . "</td>";
                                             echo "<td>" . formatTanggal($row['tgl_pinjam']) . "</td>";
+                                            echo "<td>" . formatTanggal($row["tgl_jatuhtempo"]) . "</td>";
                                             $status_class = (strtolower($row['status_pinjam']) == 'lunas') ? 'status-paid' : 'status-active';
                                             echo "<td><span class='status-badge {$status_class}'>" . ucfirst($row['status_pinjam']) . "</span></td>";
                                             break;

@@ -70,16 +70,6 @@ CREATE TABLE Pembayaran_pinjaman (
     FOREIGN KEY (id_pinjaman) REFERENCES Pinjaman(id_pinjaman)
 );
 
-CREATE TABLE Pelanggan (
-    id_pelanggan INT PRIMARY KEY AUTO_INCREMENT,
-    nama VARCHAR(100) NOT NULL,
-    tipe_pelanggan VARCHAR(50),
-    no_hp VARCHAR(20),
-    alamat TEXT,
-    id_anggota INT,
-    FOREIGN KEY (id_anggota) REFERENCES Anggota(id_anggota)
-);
-
 CREATE TABLE Pelatihan (
     id_pelatihan INT PRIMARY KEY AUTO_INCREMENT,
     judul_pelatihan VARCHAR(150),
@@ -93,7 +83,7 @@ CREATE TABLE Pelatihan (
 CREATE TABLE Peserta_pelatihan (
     id_peserta INT PRIMARY KEY AUTO_INCREMENT,
     status_kehadiran VARCHAR(20),
-    sertifikat VARCHAR(100), -- Bisa berupa nomor sertifikat atau status (Sudah/Belum)
+    no_sertifikat VARCHAR(100),
     id_pelatihan INT,
     id_anggota INT,
     FOREIGN KEY (id_pelatihan) REFERENCES Pelatihan(id_pelatihan),
@@ -105,8 +95,9 @@ CREATE TABLE Transaksi_penjualan (
     tgl_transaksi DATE,
     total_harga DECIMAL(15, 2),
     metode_pembayaran VARCHAR(50),
-    id_pelanggan INT,
-    FOREIGN KEY (id_pelanggan) REFERENCES Pelanggan(id_pelanggan)
+    jenis_pelanggan ENUM('Anggota', 'Umum'),
+    id_pelanggan INT NULL,
+    FOREIGN KEY (id_pelanggan) REFERENCES Anggota(id_anggota)
 );
 
 CREATE TABLE Detail_penjualan (

@@ -20,6 +20,14 @@
     </div>
 
     <div class="form-group">
+        <label for="id_biaya">Biaya Pendaftaran</label>
+        <input type="number" name="id_biaya" id="id_biaya" placeholder="Contoh: 50000" min="0"
+            value="<?php echo isset($data) ? htmlspecialchars($data['biaya_pendaftaran'] ?? '') : ''; ?>">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
         <label for="id_narasumber">Narasumber</label>
         <select name="id_narasumber" id="id_narasumber">
             <option value="">Pilih Narasumber</option>
@@ -30,4 +38,6 @@
             <?php endforeach; ?>
         </select>
     </div>
+    <a href="tambah_data.php?table=narasumber&ref=pelatihan<?php echo isset($data) ? '&ref_id=' . $data['id_pelatihan'] . '&edit=1' : ''; ?>"
+        class="narasumber-button">Tambah Narasumber</a>
 </div>
