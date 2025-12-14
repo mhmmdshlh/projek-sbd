@@ -28,8 +28,8 @@
 
 <div class="form-row">
     <div class="form-group">
-        <label for="id_narasumber">Narasumber</label>
-        <select name="id_narasumber" id="id_narasumber">
+        <label for="id_narasumber">Narasumber <span class="required">*</span></label>
+        <select name="id_narasumber" id="id_narasumber" required>
             <option value="">Pilih Narasumber</option>
             <?php foreach ($data_narasumber as $narasumber): ?>
                 <option value="<?php echo $narasumber['id_narasumber']; ?>" <?php echo (isset($data) && $narasumber['id_narasumber'] == $data['id_narasumber']) ? 'selected' : ''; ?>>

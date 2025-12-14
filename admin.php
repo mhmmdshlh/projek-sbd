@@ -20,6 +20,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']) 
     try {
         $delete_table = $_GET['table'];
         $id = $_GET['id'];
+        $use_transaction = false;
 
         switch ($delete_table) {
             case 'anggota':
@@ -44,10 +45,26 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']) 
                 $delete_query = "DELETE FROM Peserta_pelatihan WHERE id_peserta = ?";
                 break;
             case 'penjualan':
+                // Restore stock + delete details + delete header in one DB transaction
+                $use_transaction = true;
+                $pdo->beginTransaction();
+
+                $query_items = "SELECT id_barang, jumlah FROM Detail_penjualan WHERE id_transaksi = ?";
+                $stmt_items = $pdo->prepare($query_items);
+                $stmt_items->execute([$id]);
+                $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
+
+                $query_restore_stok = "UPDATE Barang SET stok = stok + ? WHERE id_barang = ?";
+                $stmt_restore = $pdo->prepare($query_restore_stok);
+                foreach ($items as $item) {
+                    $stmt_restore->execute([$item['jumlah'], $item['id_barang']]);
+                }
+
                 // Delete details first
                 $delete_detail = "DELETE FROM Detail_penjualan WHERE id_transaksi = ?";
                 $stmt_detail = $pdo->prepare($delete_detail);
                 $stmt_detail->execute([$id]);
+
                 // Then delete transaction
                 $delete_query = "DELETE FROM Transaksi_penjualan WHERE id_transaksi = ?";
                 break;
@@ -55,9 +72,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']) 
 
         $delete_stmt = $pdo->prepare($delete_query);
         $delete_stmt->execute([$id]);
+
+        if ($use_transaction) {
+            $pdo->commit();
+        }
         header("Location: admin.php?table=" . $delete_table);
         exit();
     } catch (PDOException $e) {
+        if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         $error_message = "Error deleting data: " . $e->getMessage();
     }
 }
@@ -112,7 +136,7 @@ try {
         case 'pelatihan':
             $query = "SELECT pel.*, n.nama as nama_narasumber 
                       FROM Pelatihan pel 
-                      LEFT JOIN Narasumber n ON pel.id_narasumber = n.id_narasumber 
+                      INNER JOIN Narasumber n ON pel.id_narasumber = n.id_narasumber 
                       ORDER BY pel.tanggal DESC";
             $page_title = "Data Pelatihan";
             $table_headers = ['No', 'Judul', 'Tanggal', 'Tempat', 'Narasumber', 'Biaya', 'Aksi'];
@@ -154,7 +178,7 @@ try {
 // Format currency function
 function formatRupiah($number)
 {
-    return "Rp " . number_format($number, 0, ',', '.');
+    return "Rp" . number_format($number, 0, ',', '.');
 }
 
 // Format date function
@@ -183,20 +207,6 @@ function formatTanggal($date)
     return $d . ' ' . $bulan[$m] . ' ' . $y;
 }
 
-// Get table display name
-function getTableDisplayName($table)
-{
-    $names = [
-        'anggota' => 'Anggota',
-        'pengurus' => 'Pengurus',
-        'simpanan' => 'Simpanan',
-        'pinjaman' => 'Pinjaman',
-        'barang' => 'Barang',
-        'pelatihan' => 'Pelatihan',
-        'peserta' => 'Peserta Pelatihan'
-    ];
-    return $names[$table] ?? 'Data';
-}
 ?>
 <!DOCTYPE html>
 <html lang="id">
