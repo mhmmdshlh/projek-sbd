@@ -46,7 +46,7 @@
     </h2>
 
     <section class="features">
-        <a href="barang_tersedia.php" style="text-decoration:none; color:inherit;">
+        <a href="halaman_katalog.php" style="text-decoration:none; color:inherit;">
             <div>
                 <div class="feature-box" aria-label="Barang Tersedia">
                     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"

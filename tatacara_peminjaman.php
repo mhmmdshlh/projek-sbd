@@ -32,7 +32,7 @@
                 <li>Siapkan identitas dan data anggota (jika belum menjadi anggota, lakukan pendaftaran dulu).</li>
                 <li>Tentukan nominal pinjaman dan tanggal jatuh tempo sesuai kesepakatan.</li>
                 <li>Admin mencatat pengajuan pada menu Pinjaman.</li>
-                <li>Setelah disetujui, status pinjaman diubah sesuai kondisi (Aktif/Lunas/Menunggak).</li>
+                <li>Setelah disetujui, status pinjaman diubah sesuai kondisi.</li>
             </ol>
 
             <p class="muted" style="margin-top: 14px;">Catatan: Detail aturan (bunga/angsuran/syarat khusus)
